@@ -18,8 +18,8 @@ cmd:option('-image_size', 512, 'Maximum height / width of generated image')
 cmd:option('-gpu', 0, 'Zero-indexed ID of the GPU to use; for CPU mode set -gpu = -1')
 
 -- Optimization options
-cmd:option('-content_weight', 5e0)
-cmd:option('-style_weight', 1e2)
+cmd:option('-content_weight', 5e1)
+cmd:option('-style_weight', 5e6)
 cmd:option('-tv_weight', 1e-3)
 cmd:option('-num_iterations', 1000)
 cmd:option('-normalize_gradients', false)
@@ -38,8 +38,8 @@ cmd:option('-original_colors', 0)
 cmd:option('-pooling', 'max', 'max|avg')
 cmd:option('-proto_file', 'models/VGG_ILSVRC_19_layers_deploy.prototxt')
 cmd:option('-model_file', 'models/VGG_ILSVRC_19_layers.caffemodel')
-cmd:option('-backend', 'nn', 'nn|cudnn|clnn')
-cmd:option('-cudnn_autotune', false)
+cmd:option('-backend', 'cudnn', 'nn|cudnn|clnn')
+cmd:option('-cudnn_autotune', true)
 cmd:option('-seed', -1)
 
 cmd:option('-content_layers', 'relu4_2', 'layers for content')
@@ -437,6 +437,7 @@ function GramMatrix()
   concat:add(nn.Identity())
   net:add(concat)
   net:add(nn.MM(false, true))
+  net:add(nn.Sqrt())
   return net
 end
 
